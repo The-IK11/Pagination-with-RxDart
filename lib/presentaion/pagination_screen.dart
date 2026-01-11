@@ -25,6 +25,8 @@ final ScrollController _scrollController = ScrollController();
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         // Reached the bottom of the list
+      
+ if(hasMore)
         fetchItems();
         //_loadItems();
       }
@@ -40,7 +42,7 @@ final ScrollController _scrollController = ScrollController();
     ),
   );
   bool _loading = false;
-
+  bool hasMore = true;
   late final ItemRepositoryImpl _repository;
 
  
@@ -67,11 +69,11 @@ final ScrollController _scrollController = ScrollController();
                       itemBuilder: (context, index) {
                         // Show custom loading indicator as the last item
                         if (index == items.length) {
-                          return _loading? const CustomLoadingIndicator(
+                          return hasMore? const CustomLoadingIndicator(
                             size: 60.0,
                             primaryColor: Colors.greenAccent,
                             secondaryColor: Colors.green,
-                          ) : const SizedBox.shrink();
+                          ) : Center(child: Text("No more items to load",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.grey),));
                         }
                         
                         final item = items[index];
@@ -103,7 +105,7 @@ final ScrollController _scrollController = ScrollController();
       
       final startId = items.length + 1;
       final newItems = List.generate(
-        5,
+        10,
         (index) => Item(
           id: startId + index,
           title: 'Item ${startId + index}',
@@ -120,6 +122,12 @@ final ScrollController _scrollController = ScrollController();
       setState(() {
         _loading = false;
       });
+
+      if (items.length >= 50) {
+        setState(() {
+          hasMore = false;
+        });
+      }
     }
   }
 
