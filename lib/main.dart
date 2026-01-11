@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pagination_with_rxdart/presentaion/pagination_screen.dart';
 
 void main() {
@@ -15,7 +16,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Pagination Flutter Demo',
       theme: ThemeData(
-       
+   textTheme: GoogleFonts.lailaTextTheme(
+      Theme.of(context).textTheme,
+    ), 
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const PaginationScreen(),
