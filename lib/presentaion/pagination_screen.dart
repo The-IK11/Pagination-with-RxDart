@@ -13,6 +13,7 @@ class PaginationScreen extends StatefulWidget {
 
 class _PaginationScreenState extends State<PaginationScreen> {
 
+final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -20,6 +21,14 @@ class _PaginationScreenState extends State<PaginationScreen> {
     //Implement it next
     // _repository = ItemRepositoryImpl(LocalItemDatasource());
     // _loadItems();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        // Reached the bottom of the list
+        fetchItems();
+        //_loadItems();
+      }
+    });
   }
   // List to hold items (domain entity)
   List<Item> items = List.generate(
@@ -34,7 +43,7 @@ class _PaginationScreenState extends State<PaginationScreen> {
 
   late final ItemRepositoryImpl _repository;
 
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,23 +56,22 @@ class _PaginationScreenState extends State<PaginationScreen> {
         title: const Text('Pagination Bottom Load',style: TextStyle(fontWeight: FontWeight.bold),) ,
       ),
       body: SafeArea(
-        child: _loading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
+        child: Column(
                 children: [
                   Expanded(
                     child: ListView.separated(
+                      controller: _scrollController,
                       padding: const EdgeInsets.all(8),
                       itemCount: items.length + 1,
                       separatorBuilder: (context, index) => const SizedBox(height: 10),
                       itemBuilder: (context, index) {
                         // Show custom loading indicator as the last item
                         if (index == items.length) {
-                          return const CustomLoadingIndicator(
+                          return _loading? const CustomLoadingIndicator(
                             size: 60.0,
                             primaryColor: Colors.greenAccent,
                             secondaryColor: Colors.green,
-                          );
+                          ) : const SizedBox.shrink();
                         }
                         
                         final item = items[index];
@@ -81,6 +89,38 @@ class _PaginationScreenState extends State<PaginationScreen> {
               ),
       ),
     );
+  }
+
+//Pagination Loader - fetches new items when reaching bottom
+  Future<void> fetchItems() async {
+    setState(() {
+      _loading = true;
+    });
+    
+    try {
+      // Simulate network delay
+      await Future.delayed(const Duration(seconds: 2));
+      
+      final startId = items.length + 1;
+      final newItems = List.generate(
+        5,
+        (index) => Item(
+          id: startId + index,
+          title: 'Item ${startId + index}',
+          description: 'Description for item ${startId + index}',
+        ),
+      );
+      
+      setState(() {
+        items.addAll(newItems);
+      });
+    } catch (e) {
+      debugPrint('Failed to fetch items: $e');
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
 
