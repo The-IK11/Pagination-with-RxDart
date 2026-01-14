@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pagination_with_rxdart/presentaion/pagination_screen.dart';
 import 'package:pagination_with_rxdart/presentaion/api_pagination_screen.dart';
+import 'package:pagination_with_rxdart/presentaion/rx_dart_pagincation_screen.dart';
 
 class AllPaginationTypeButton extends StatefulWidget {
   const AllPaginationTypeButton({super.key});
@@ -162,9 +163,11 @@ class _AllPaginationTypeButtonState extends State<AllPaginationTypeButton>
                         title: 'RxDart × API Pagination',
                         description: 'Advanced reactive\nprogramming',
                         color: Colors.orange,
-                        onTap: () {
-                          _showComingSoon(context);
-                        },
+                        onTap: () => _navigateTo(
+                          context,
+                          const RxDartPaginationScreen(),
+                          'RxDart × API Pagination',
+                        ),
                       ),
                     ],
                   ),
@@ -175,7 +178,7 @@ class _AllPaginationTypeButtonState extends State<AllPaginationTypeButton>
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  'Build with ❤️ using Flutter',
+                  'Build with ❤️ using Flutter(The-IK11)',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[500],
@@ -328,92 +331,6 @@ class _AllPaginationTypeButtonState extends State<AllPaginationTypeButton>
             child: child,
           );
         },
-      ),
-    );
-  }
-
-  void _showComingSoon(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            gradient: LinearGradient(
-              colors: [Colors.white, Colors.grey[50]!],
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.orange[400]!, Colors.orange[300]!],
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.electric_bolt,
-                  size: 36,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Coming Soon!',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'RxDart × API Pagination feature\nis under development',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.orange[400]!, Colors.orange[300]!],
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: Text(
-                        'OK',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

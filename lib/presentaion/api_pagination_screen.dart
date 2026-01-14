@@ -77,6 +77,7 @@ final PaginationApiService _apiService = PaginationApiService();
                   id: p.id ?? 0,
                   title: p.title ?? 'No Title',
                   description: 'Price: \$${p.price ?? 0}',
+                  thumbnail: p.thumbnail,
                 ))
             .toList();
 
@@ -116,6 +117,7 @@ final PaginationApiService _apiService = PaginationApiService();
                   id: p.id ?? 0,
                   title: p.title ?? 'No Title',
                   description: 'Price: \$${p.price ?? 0}',
+                  thumbnail: p.thumbnail,
                 ))
             .toList();
 
@@ -296,6 +298,49 @@ final PaginationApiService _apiService = PaginationApiService();
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Product thumbnail image
+                if (item.thumbnail != null && item.thumbnail!.isNotEmpty)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      width: double.infinity,
+                      height: 150,
+                      color: Colors.grey[200],
+                      child: Image.network(
+                        item.thumbnail!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey[600],
+                              size: 48,
+                            ),
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return Container(
+                            color: Colors.grey[200],
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                if (item.thumbnail != null && item.thumbnail!.isNotEmpty)
+                  const SizedBox(height: 12),
                 // Header with ID badge
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
