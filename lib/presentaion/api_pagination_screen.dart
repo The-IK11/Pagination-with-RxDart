@@ -13,7 +13,7 @@ class ApiPaginationScreen extends StatefulWidget {
 class _ApiPaginationScreenState extends State<ApiPaginationScreen>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
-  final PaginationApiService _apiService = PaginationApiService();
+final PaginationApiService _apiService = PaginationApiService();
 
   // Pagination variables
   int _currentSkip = 0;
@@ -43,8 +43,13 @@ class _ApiPaginationScreenState extends State<ApiPaginationScreen>
   void dispose() {
     _scrollController.dispose();
     _scrollAnimationController.dispose();
+    // Only dispose remaining controllers
     for (var controller in _itemAnimationControllers) {
-      controller.dispose();
+      try {
+        controller.dispose();
+      } catch (e) {
+        debugPrint('Error disposing controller: $e');
+      }
     }
     super.dispose();
   }
@@ -145,14 +150,11 @@ class _ApiPaginationScreenState extends State<ApiPaginationScreen>
   }
 
   void _createItemAnimations(int itemCount) {
-    // Dispose old animations
-    for (var controller in _itemAnimationControllers) {
-      controller.dispose();
-    }
-    _itemAnimationControllers.clear();
-
-    // Create new animations
-    for (int i = 0; i < itemCount; i++) {
+    // Only create animations for NEW items
+    // Keep existing animations for old items (they're already completed)
+    final existingCount = _itemAnimationControllers.length;
+    
+    for (int i = existingCount; i < itemCount; i++) {
       final controller = AnimationController(
         duration: const Duration(milliseconds: 600),
         vsync: this,
@@ -229,7 +231,7 @@ class _ApiPaginationScreenState extends State<ApiPaginationScreen>
                   }
 
                   if (index < _itemAnimationControllers.length) {
-                    return _buildAnimatedItemCard(index);
+               return _buildAnimatedItemCard(index);
                   }
 
                   return _buildItemCard(items[index]);
